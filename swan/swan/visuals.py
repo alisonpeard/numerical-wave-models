@@ -18,7 +18,7 @@ def flattened_heatmap(X, dims, which='z', ax=None, **kwargs):
     if ax is None:
         _, ax = plt.subplots()
     X = flattened_meshgrid(X, dims, which)
-    im = ax.imshow(X)
+    im = ax.imshow(X, **kwargs)
     plt.colorbar(im)
 
 

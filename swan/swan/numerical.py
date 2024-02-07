@@ -63,7 +63,15 @@ def dfds_central_diff(direction, stepx, stepy, dx=0.5, dy=0.5):
 def eliminate_negative_energies(E, dtheta, ntheta):
     """Eliminate negative energy densities.
     
-    Conservative and strict elimination (Tolman, 1991), SWAN (3.27)."""
+    Conservative and strict elimination (Tolman, 1991), SWAN (3.27)
+    
+    Parameters:
+    -----------
+    E : np.ndarray
+        Numpy array of energy densities of dimensio (nθ,nσ,...).
+    dtheta : float
+    nthete : int
+    """
     Epos = np.where(E > 0, E, 0)
 
     Etot = E.sum(axis=0) * dtheta
@@ -77,8 +85,8 @@ def eliminate_negative_energies(E, dtheta, ntheta):
     return Epos * alpha
 
 
-# directional sweeps
-def flip_for_sweep(N, sweep):
+# utils for directional sweeps
+def sweep_flip(N, sweep):
     if sweep == 0: # first quadrant
         return N
     elif sweep == 1: # second quadrant (flip x)
@@ -91,17 +99,29 @@ def flip_for_sweep(N, sweep):
         raise ValueError("Sweep number must be one of [0, 1, 2, 3]")
 
 
-# def filter_cxcy_for_sweep(cx, cy, sweep):
-#     if sweep == 1:
-#         condition = (cx > 0) & (cy > 0)
-#     elif sweep == 2:
-#         condition = (cx < 0) & (cy > 0)
-#     elif sweep == 3:
-#         condition = (cx < 0) & (cy < 0)
-#     elif sweep == 4:
-#         condition = (cx > 0) & (cy < 0)
-#     else:
-#         raise ValueError("Sweep number must be one of [1, 2, 3, 4]")
-#     cx = np.where(condition, cx, 0)
-#     cy = np.where(condition, cy, 0)
-#     return cx, cy
+def flip_spatial_velocities(cx, cy, sweep):
+    """Double-check this makes sense."""
+    if sweep == 0:
+        return cx, cy
+    elif sweep == 1:
+        return -cx, cy
+    elif sweep == 2:
+        return -cx, -cy
+    elif sweep == 3:
+        return cx, -cy
+    else:
+        raise ValueError("Sweep number must be one of [0, 1, 2, 3]")
+    
+
+def flip_directional_velocities(cθ, sweep):
+    """Double-check this makes sense."""
+    if sweep == 0:
+        return cθ
+    elif sweep == 1:
+        return -cθ
+    elif sweep == 2:
+        return cθ
+    elif sweep == 3:
+        return -cθ
+    else:
+        raise ValueError("Sweep number must be one of [0, 1, 2, 3]")

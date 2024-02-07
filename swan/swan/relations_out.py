@@ -29,7 +29,7 @@ def action_density(E, Σ):
     Σ : numpy.ndarray
         action density np.meshgrid of shape (nθ, nσ, ny, nx)
     """
-    Σ = Σ.reshape(N.shape, order=order)
+    Σ = Σ.reshape(E.shape, order=order)
     N = E / Σ
     return N
 
@@ -51,8 +51,8 @@ def sse_variance(E, dtheta, dsigma):
         log-distributed frequency delta
     """
     spectrum_1d = E.sum(axis=0) * dtheta
-    m0 = (spectrum_1d * dsigma[:, np.newaxis]).sum(axis=0)
-    # m0 = (spectrum_1d).sum(axis=0) * dsigma
+    #m0 = (spectrum_1d * dsigma[:, np.newaxis]).sum(axis=0)
+    m0 = np.einsum('j,j...->...', dsigma, spectrum_1d)
     return m0
     
     
