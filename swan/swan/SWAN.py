@@ -92,6 +92,7 @@ class SWAN:
             sweep['θ'], sweep['Σ'] = θ, Σ
             sweep['N0'] = N
             sweep['A'] = Ainv
+            sweep['fpeak'] = fpeak
             
         self.dtheta = self.sweeps[0]['dtheta']
         self.Σ_full = np.concatenate([sweep['Σ'] for sweep in self.sweeps], axis=0)

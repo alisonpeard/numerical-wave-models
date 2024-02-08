@@ -9,6 +9,9 @@ def bsbt_matrix(stepx, stepy, cx, cy, dx, dy):
     """Construct BSBT scheme matrix.
     
     Tested: yes
+
+    1D Example:
+    >>> A = swan.bsbt_matrix(1, 0, cx * np.ones(nx), np.array([0]), 1, 1)
     """
     cx = cx.ravel(order=order)
     cy = cy.ravel(order=order)

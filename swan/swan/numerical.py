@@ -125,3 +125,20 @@ def flip_directional_velocities(cθ, sweep):
         return -cθ
     else:
         raise ValueError("Sweep number must be one of [0, 1, 2, 3]")
+    
+
+# helper functions
+def indicate_boundaries2d(ny, nx):
+    """Return mask indicating boundary cells for x and y."""
+    xmin = np.zeros([ny, nx], dtype=bool).ravel(order=order)
+    xmin[:ny] = 1
+    
+    xmax = np.zeros([ny, nx], dtype=bool).ravel(order=order)
+    xmax[-ny:] = 1
+    
+    ymin = np.zeros([ny, nx], dtype=bool).ravel(order=order)
+    ymin[::nx] = 1
+    
+    ymax = np.zeros([ny, nx], dtype=bool).ravel(order=order)
+    ymax[(nx-1)::nx] = 1
+    return xmin, xmax, ymin, ymax
