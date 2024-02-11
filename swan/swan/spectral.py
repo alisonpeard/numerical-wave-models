@@ -5,7 +5,7 @@ from .default_vars import *
 from .numerical import *
 
 
-def hybrid_matrix_theta(cθ, step, nu=0.5):
+def hybrid_matrix_theta(cθ, step=1, nu=0.5):
     """nu=0: upwind scheme, nu=1: central difference scheme.
     step should be 1 for row-major ('C') ordering in (σ,θ).
     """

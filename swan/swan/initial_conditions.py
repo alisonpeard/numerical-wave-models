@@ -4,7 +4,7 @@ from numpy.linalg import norm as l2
 from .default_vars import *
 
 
-def peak_frequency_pm(u10, g=9.81):
+def peak_frequency_pm(u10, g=g):
     """Return Pierson Moskovitz peak angular frequency σ.
     
     https://wikiwaves.org/Ocean-Wave_Spectra"""
@@ -13,7 +13,12 @@ def peak_frequency_pm(u10, g=9.81):
     return σpm
 
 
-def spectrum_pm(f, u10=20, α=8.1e-3, β=0.74, g=9.81, angular=False):
+def significant_wave_pm(u10, g=g):
+    """https://wikiwaves.org/Ocean-Wave_Spectra"""
+    return 0.22 * (u10)**2 / g
+
+
+def spectrum_pm(f, u10=20, α=8.1e-3, β=0.74, g=g, angular=False):
     """Pierson and Moskovitz frequency spectrum.
     
     https://wikiwaves.org/Ocean-Wave_Spectra
@@ -24,6 +29,28 @@ def spectrum_pm(f, u10=20, α=8.1e-3, β=0.74, g=9.81, angular=False):
     ω0 = g / u195
     S = ((α * g**2) / ω**5) * np.exp(-β * (ω0 / ω)**4)
     return S
+
+
+def peak_enhancement(f, u10, F, g=g, angular=True):
+    """https://wikiwaves.org/Ocean-Wave_Spectra"""
+    const = 1 if angular else 2 * np.pi   
+    ω = const * f
+    ωp = 22 * (g**2 / (u10 * F))**(1/3)
+    γ = 3.3
+    σ = 0.07 if ω <= ωp else 0.09
+    r = np.exp(- (ω - ωp)**2 / (2 * σ**2 * ω**2))
+    return γ**r
+
+
+def spectrum_JONSWAP(f, u10, F, angular=True):
+    α = 0.076 * (u10**2 / (F * g))**(0.22)
+    γr = peak_enhancement(f, u10, F)
+    S = spectrum_pm(f, u10, α, angular=angular) * γr
+    return S
+
+def significant_wave_height_JONSWAP(u10, F, g=g):
+    m0 = 1.67e-7 * F * (u10)**2 / g
+    return 4 * np.sqrt(m0)
 
 
 def cos2_model(θ, θm):
